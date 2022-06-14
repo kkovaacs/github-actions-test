@@ -10,13 +10,6 @@ jobs:
   update-docker-images:
     runs-on: ubuntu-latest
     steps:
-      - name: Free up space
-        run: |
-          echo "before freeing up space:"
-          df -h
-          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc
-          echo "after freeing up space:"
-          df -h
       - name: Determine Docker image metadata
         id: meta
         uses: docker/metadata-action@v4
@@ -24,6 +17,7 @@ jobs:
           images: eqlabs/pathfinder
           tags: |
             type=semver,pattern={{raw}}
+            type=raw,value=snapshot-{{branch}}-{{sha}}
       # Workaround for https://github.com/rust-lang/cargo/issues/8719
       - name: Set Swap Space
         uses: pierotofy/set-swap-space@v1.0
