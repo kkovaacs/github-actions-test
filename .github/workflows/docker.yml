@@ -16,8 +16,10 @@ jobs:
         with:
           images: eqlabs/pathfinder
           tags: |
-            type=semver,pattern={{raw}}
-            type=raw,value=snapshot-{{branch}}-{{sha}}
+            type=semver,latest=true,pattern={{raw}}
+            # pre-release builds don't update `latest` by default
+            type=raw,value=latest,enable=${{ github.event_name == 'push' && startsWith('refs/tags/v', github.ref) }}
+            type=raw,value=snapshot-{{branch}}-{{sha}},enable=false
       # Workaround for https://github.com/rust-lang/cargo/issues/8719
       - name: Set Swap Space
         uses: pierotofy/set-swap-space@v1.0
